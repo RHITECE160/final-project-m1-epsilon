@@ -51,7 +51,7 @@ const uint16_t fastSpeed = 30;
 
 void setup() {
   Serial.begin(57600);
-  Serial.print("Starting up Robot code...... ");
+  Serial.print("Starting up Robot code...... Hello World");
 
   // Run setup code
   setupRSLK();
