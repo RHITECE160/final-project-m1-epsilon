@@ -48,7 +48,7 @@ RemoteMode CurrentRemoteMode = PLAYSTATION;
 
 // Tuning Parameters
 const uint16_t lowSpeed = 15;
-const uint16_t fastSpeed = 30;
+const uint16_t fastSpeed = 50;
 
 const int servoPin = 38;
 Servo myServo;
@@ -128,6 +128,7 @@ void loop() {
     // the forward() and stop() functions should be independent of
     // the control methods
     if (ps2x.Button(PSB_PAD_UP)) {
+      Serial.print(ps2x.Button(PSB_PAD_UP));
       Serial.println("PAD UP button pushed ");
       forward();
     } 
@@ -159,4 +160,8 @@ void loop() {
       Serial.println("Square button pressed");
       Closeclaw(myServo);
     }
+    else {
+      stop();
+    }
+
   }

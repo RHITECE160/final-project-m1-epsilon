@@ -34,16 +34,16 @@ void back() {
 
 void TurnRight() {
   enableMotor(BOTH_MOTORS);
-  setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
-  setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_BACKWARD);
+  setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
+  setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_FORWARD);
   setMotorSpeed(RIGHT_MOTOR, lowSpeed);
   setMotorSpeed(LEFT_MOTOR, fastSpeed);
 }
 
 void TurnLeft() {
   enableMotor(BOTH_MOTORS);
-  setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
-  setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_BACKWARD);
+  setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
+  setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_FORWARD);
   setMotorSpeed(LEFT_MOTOR, lowSpeed);
   setMotorSpeed(RIGHT_MOTOR, fastSpeed);
 }
