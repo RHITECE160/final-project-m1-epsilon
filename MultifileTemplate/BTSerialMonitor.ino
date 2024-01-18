@@ -1,6 +1,6 @@
 // baud rate: 9600
 // name: HC06_Epsilon
-// Security Pin 
+// Security Pin: 1234
 
 
 /* hardware connections 
@@ -12,8 +12,8 @@
 
 
 void setup() {
-  Serial.begin(57600);
-  Serial1.begin(9600);  // use baud rate you set
+  Serial.begin(57600); // plug in terminal 
+  Serial1.begin(9600);  // bluetooth terminal (out going com) 
 }
 
 void loop() {
