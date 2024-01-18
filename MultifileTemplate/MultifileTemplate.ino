@@ -33,6 +33,7 @@
 #define PS2_SEL 34  //P2.3 <-> yellow wire (also called attention)
 #define PS2_CLK 35  //P6.7 <-> blue wire
 
+
 // Create an instance of the playstation controller object
 PS2X ps2x;
 
@@ -49,12 +50,19 @@ RemoteMode CurrentRemoteMode = PLAYSTATION;
 const uint16_t lowSpeed = 15;
 const uint16_t fastSpeed = 30;
 
+const int servoPin = 38;
+Servo myServo;
+
+
 void setup() {
   Serial.begin(57600);
   Serial.print("Starting up Robot code...... Hello World");
 
   // Run setup code
   setupRSLK();
+
+  //setup esrvo
+  myServo.attach(servoPin); 
 
   if (CurrentRemoteMode == 0) {
     // using the playstation controller
@@ -122,8 +130,33 @@ void loop() {
     if (ps2x.Button(PSB_PAD_UP)) {
       Serial.println("PAD UP button pushed ");
       forward();
-    } else if (ps2x.Button(PSB_CROSS)) {
+    } 
+    else if(ps2x.Button(PSB_PAD_DOWN)) {
+      Serial.println("PAD DOWN button pushed ");
+      back();
+    }
+    else if(ps2x.Button(PSB_PAD_RIGHT)) {
+      Serial.println("PAD RIGHT button pushed ");
+      TurnRight();
+    }
+    else if(ps2x.Button(PSB_PAD_LEFT)) {
+      Serial.println("PAD LEFT button pushed ");
+      TurnLeft();
+    }
+    else if(ps2x.Button(PSB_R2)) {
+      Serial.println("R2 button pushed ");
+      spin();
+    }
+    else if (ps2x.Button(PSB_CROSS)) {
       Serial.println("CROSS button pushed");
       stop();
+    } 
+    else if(ps2x.Button(PSB_CIRCLE)) {
+      Serial.println("Circle button pressed");
+      Openclaw(myServo);
+    } 
+    else if(ps2x.Button(PSB_SQUARE)) {
+      Serial.println("Square button pressed");
+      Closeclaw(myServo);
     }
   }

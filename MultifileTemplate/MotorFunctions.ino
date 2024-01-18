@@ -19,10 +19,53 @@
 
 /* Moves robot forward: both motors forward same speed */
 void forward() {
-    enableMotor(BOTH_MOTORS);
-    setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
-    setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_FORWARD);
-    setMotorSpeed(BOTH_MOTORS, fastSpeed);
+  enableMotor(BOTH_MOTORS);
+  setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
+  setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_FORWARD);
+  setMotorSpeed(BOTH_MOTORS, lowSpeed);
+}
+
+void back() {
+  enableMotor(BOTH_MOTORS);
+  setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
+  setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_BACKWARD);
+  setMotorSpeed(BOTH_MOTORS, lowSpeed);
+}
+
+void TurnRight() {
+  enableMotor(BOTH_MOTORS);
+  setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
+  setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_BACKWARD);
+  setMotorSpeed(RIGHT_MOTOR, lowSpeed);
+  setMotorSpeed(LEFT_MOTOR, fastSpeed);
+}
+
+void TurnLeft() {
+  enableMotor(BOTH_MOTORS);
+  setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
+  setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_BACKWARD);
+  setMotorSpeed(LEFT_MOTOR, lowSpeed);
+  setMotorSpeed(RIGHT_MOTOR, fastSpeed);
+}
+
+void spin() {
+  enableMotor(BOTH_MOTORS);
+  setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
+  setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_FORWARD);
+  setMotorSpeed(LEFT_MOTOR, fastSpeed);
+  setMotorSpeed(RIGHT_MOTOR, fastSpeed);
+}
+
+void Openclaw(Servo myServo) {
+  //enableMotor(SERVOS_PER_TIMER);
+  myServo.write(-180);
+  delay(100);
+}
+
+void Closeclaw(Servo myServo) {
+  //enableMotor(SERVOS_PER_TIMER);
+  myServo.write(180);
+  delay(100);
 }
 
 /* Stops robot forward: both motors disabled */
