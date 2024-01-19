@@ -1,3 +1,4 @@
+
 /*A multifile project code template
   A template for the Milestone 1 project code that uses multiple files
   for modularity. The compiler first loads the principal file 
@@ -24,18 +25,10 @@
 
 // Load libraries used
 #include "SimpleRSLK.h"
-#include <Servo.h>
+#include "Servo.h"
 #include "PS2X_lib.h"
-
-// Define pin numbers for the button on the PlayStation controller
-#define PS2_DAT 14  //P1.7 <-> brown wire
-#define PS2_CMD 15  //P1.6 <-> orange wire
-#define PS2_SEL 34  //P2.3 <-> yellow wire (also called attention)
-#define PS2_CLK 35  //P6.7 <-> blue wire
-
-
-// Create an instance of the playstation controller object
-PS2X ps2x;
+#include "TinyIRremote.h"
+#include "Constants.h"
 
 // Define remote mode either playstation controller or IR remote controller
 enum RemoteMode {
@@ -50,19 +43,18 @@ RemoteMode CurrentRemoteMode = PLAYSTATION;
 const uint16_t lowSpeed = 15;
 const uint16_t fastSpeed = 50;
 
-const int servoPin = 38;
-Servo myServo;
 
 
 void setup() {
-  Serial.begin(57600);
-  Serial.print("Starting up Robot code...... Hello World");
+  Serial.begin(usbBaud); // plug in terminal 
+  Serial1.begin(btBaud);  // bluetooth terminal (out going com) 
+  Serial.println("Using the USB Cable…");
+  Serial1.println("Using the Bluetooth Serial...");
 
   // Run setup code
   setupRSLK();
-
-  //setup esrvo
   myServo.attach(servoPin); 
+
 
   if (CurrentRemoteMode == 0) {
     // using the playstation controller
@@ -71,12 +63,10 @@ void setup() {
     // Initialize PlayStation controller
     delayMicroseconds(500 * 1000);  //added delay to give wireless ps2 module some time to startup, before configuring it
     // declare variables for playstation control
-    bool pressures = false;
-    bool rumble = false;
     int error = 1;
 
     while (error) {
-      error = ps2x.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
+      error = Controller.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, false, false);
 
       if (error == 0)
         Serial.println("Found Controller, configured successful ");
@@ -98,7 +88,7 @@ void setup() {
 
 void loop() {
   // Read input from PlayStation controller
-  ps2x.read_gamepad();
+  Controller.read_gamepad();
 
   // Operate the robot in remote control mode
   if (CurrentRemoteMode == 0) {
@@ -127,36 +117,36 @@ void loop() {
     // Example of receive and decode remote control command
     // the forward() and stop() functions should be independent of
     // the control methods
-    if (ps2x.Button(PSB_PAD_UP)) {
-      Serial.print(ps2x.Button(PSB_PAD_UP));
+    if (Controller.Button(PSB_PAD_UP)) {
+      Serial.print(Controller.Button(PSB_PAD_UP));
       Serial.println("PAD UP button pushed ");
       forward();
     } 
-    else if(ps2x.Button(PSB_PAD_DOWN)) {
+    else if(Controller.Button(PSB_PAD_DOWN)) {
       Serial.println("PAD DOWN button pushed ");
       back();
     }
-    else if(ps2x.Button(PSB_PAD_RIGHT)) {
+    else if(Controller.Button(PSB_PAD_RIGHT)) {
       Serial.println("PAD RIGHT button pushed ");
       TurnRight();
     }
-    else if(ps2x.Button(PSB_PAD_LEFT)) {
+    else if(Controller.Button(PSB_PAD_LEFT)) {
       Serial.println("PAD LEFT button pushed ");
       TurnLeft();
     }
-    else if(ps2x.Button(PSB_R2)) {
+    else if(Controller.Button(PSB_R2)) {
       Serial.println("R2 button pushed ");
       spin();
     }
-    else if (ps2x.Button(PSB_CROSS)) {
+    else if (Controller.Button(PSB_CROSS)) {
       Serial.println("CROSS button pushed");
       stop();
     } 
-    else if(ps2x.Button(PSB_CIRCLE)) {
+    else if(Controller.Button(PSB_CIRCLE)) {
       Serial.println("Circle button pressed");
       Openclaw(myServo);
     } 
-    else if(ps2x.Button(PSB_SQUARE)) {
+    else if(Controller.Button(PSB_SQUARE)) {
       Serial.println("Square button pressed");
       Closeclaw(myServo);
     }
