@@ -161,9 +161,45 @@ PAD UP button moves both motors forward
 CROSS button stops motors
 */
 
-/*
-void RemoteControlPlaystation() {
-   // put your code here to run in remote control mode
+    // Example of receive and decode remote control command
+    // the forward() and stop() functions should be independent of
+    // the control methods
+    if (Controller.Button(PSB_PAD_UP)) {
+      Serial.print(Controller.Button(PSB_PAD_UP));
+      Serial.println("PAD UP button pushed ");
+      forward();
+    } 
+    else if(Controller.Button(PSB_PAD_DOWN)) {
+      Serial.println("PAD DOWN button pushed ");
+      back();
+    }
+    else if(Controller.Button(PSB_PAD_RIGHT)) {
+      Serial.println("PAD RIGHT button pushed ");
+      TurnRight();
+    }
+    else if(Controller.Button(PSB_PAD_LEFT)) {
+      Serial.println("PAD LEFT button pushed ");
+      TurnLeft();
+    }
+    else if(Controller.Button(PSB_R2)) {
+      Serial.println("R2 button pushed ");
+      spin();
+    }
+    else if (Controller.Button(PSB_CROSS)) {
+      Serial.println("CROSS button pushed");
+      stop();
+    } 
+    else if(Controller.Button(PSB_CIRCLE)) {
+      Serial.println("Circle button pressed");
+      Openclaw(myServo);
+    } 
+    else if(Controller.Button(PSB_SQUARE)) {
+      Serial.println("Square button pressed");
+      Closeclaw(myServo);
+    }
+    else {
+      stop();
+    }
 
    // Example of receive and decode remote control command
    // the forward() and stop() functions should be independent of
