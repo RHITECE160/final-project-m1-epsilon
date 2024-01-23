@@ -17,22 +17,11 @@
 #include "MotorFunctions.h"
 #include "Driving.h"
 
-// Define remote mode either playstation controller or IR remote controller
-enum RemoteMode
-{
-  PLAYSTATION,
-  IR_REMOTE,
-};
-
-IRreceiver irx(IRrecPin);
-IRData irResults;
-
 PS2X Controller;
 Servo myServo;
 
 // Declare and initialize the current state variable
-RemoteMode CurrentRemoteMode = PLAYSTATION;
-int betterRemoteMode = 0;
+int controlMode = 1;
 
 // Tuning Parameters
 const uint16_t lowSpeed = 15;
@@ -49,18 +38,19 @@ void setup()
   setupRSLK();
   myServo.attach(servoPin);
 
-  if (CurrentRemoteMode == 0)
+  if (controlMode == 0)
   {
     // using the playstation controller
-    Serial.println("Using playstation controller, make sure it is paired first ");
+    Serial.println("Starting with playstation controller, make sure it is paired first ");
 
     // Initialize PlayStation controller
-    delayMicroseconds(500 * 1000); // added delay to give wireless ps2 module some time to startup, before configuring it
+    delay(50); // added delay to give wireless ps2 module some time to startup, before configuring it
     // declare variables for playstation control
   }
-  else if (CurrentRemoteMode == 1)
+  else if (controlMode == 1)
   {
-    // put start-up code for IR controller here if neccessary
+    // put autonomous initialization code for here if neccessary
+    Serial.println("Starting in Autonomous")
   }
 
   int error = Controller.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, false, false);
@@ -76,17 +66,8 @@ void setup()
 
   else if (error == 3)
     Serial.println("Controller refusing to enter Pressures mode, may not support it. ");
-  delayMicroseconds(1000 * 1000);
+  delay(50);
 
-  if (irx.initIRReceiver())
-  {
-    Serial.println("IR Receiver Works");
-    enableRXLEDFeedback(LED_BUILTIN);
-  }
-  else
-  {
-    Serial.println("IR Receiver Busted");
-  }
 }
 
 void loop()
@@ -97,7 +78,7 @@ void loop()
 
   // Starts by default with betterRemoteMode as 0, this is the playstation mode, when you hit the Select button it
   // switches over to IR control, when in IR control mode when the start button is pressed it will switch back to the controller.
-  switch (betterRemoteMode)
+  switch (controlMode)
   {
   // Controller mode, when L1 is pressed it drives according to the driveByController function
   case 0:
@@ -105,9 +86,8 @@ void loop()
     RemoteControlPlaystation();
     if (Controller.Button(PSB_SELECT))
     {
-      betterRemoteMode = 1;
-      Serial.print("Control Mode : ");
-      Serial.println(betterRemoteMode);
+      controlMode = 1;
+      Serial.println("Control Mode : Autonomous");
       delay(40);
     }
     else
@@ -117,19 +97,17 @@ void loop()
 
     break;
 
-    // IR Remote Section, calls drive by remote repeatedly until start button is pressed
+    // Autonomous, calls drive by remote repeatedly until start button is pressed
   case 1:
-    driveByRemote(irx, irResults, myServo);
     if (Controller.Button(PSB_START))
     {
-      betterRemoteMode = 0;
-      Serial.print("Control Mode : ");
-      Serial.println(betterRemoteMode);
+      controlMode = 0;
+      Serial.println("Control Mode : Manual");
       delay(40);
     }
     else
     {
-      Serial.println("IR Remote Selected");
+      Serial.println("Autonomous Selected");
     }
     break;
   }

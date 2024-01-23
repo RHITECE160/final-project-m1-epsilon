@@ -8,6 +8,39 @@ int halfJoy = 255 / 2;
 int fullJoy = 255;
 int offJoy = 0;
 
+// This function takes in the controller and servo objects and sets the joystick relative to the centerpoint
+// it implements a deadzone when the motor power would be less than 5%
+void driveByController(PS2X fController, Servo fServo)
+{
+    int rawJoyLY = fController.Analog(PSS_LY);
+    int moveSpeed = 0;
+
+    Serial.print("Joystick Raw Value: ");
+    Serial.println(rawJoyLY);
+    enableMotor(BOTH_MOTORS);
+
+    if (rawJoyLY <= 255 / 2)
+    {
+        setMotorDirection(BOTH_MOTORS, MOTOR_DIR_BACKWARD);
+        moveSpeed = map(255 - rawJoyLY, offJoy, halfJoy, 0, 20);
+    }
+    else
+    {
+        setMotorDirection(BOTH_MOTORS, MOTOR_DIR_FORWARD);
+        moveSpeed = map(rawJoyLY, halfJoy, fullJoy, 0, 20);
+    }
+    if (moveSpeed < 5)
+    {
+        moveSpeed = 0;
+    }
+    setMotorSpeed(BOTH_MOTORS, moveSpeed);
+    Serial.print("Motor adjusted value: ");
+    Serial.println(moveSpeed);
+    delay(50);
+}
+
+
+/*
 // direction is an int that is in 45 degree increments with 0 equal to right
 // takes in angles and drives in directions corresponding to the inputs at the set speed
 void driveByDirection(int direction, int speed)
@@ -66,9 +99,9 @@ void driveByDirection(int direction, int speed)
     delay(100);
 }
 
-/*
+
 function that takes IR objects and can perform all needed movements for checkpoint one by 
-setting the servo or by calling the  driveByDirection function*/
+setting the servo or by calling the  driveByDirection function
 void driveByRemote(IRreceiver fIRx, IRData fIRResults, Servo fServo)
 {
     int state = 0;
@@ -135,33 +168,4 @@ void driveByRemote(IRreceiver fIRx, IRData fIRResults, Servo fServo)
         break;
     }
 }
-// This function takes in the controller and servo objects and sets the joystick relative to the centerpoint
-// it implements a deadzone when the motor power would be less than 5%
-void driveByController(PS2X fController, Servo fServo)
-{
-    int rawJoyLY = fController.Analog(PSS_LY);
-    int moveSpeed = 0;
-
-    Serial.print("Joystick Raw Value: ");
-    Serial.println(rawJoyLY);
-    enableMotor(BOTH_MOTORS);
-
-    if (rawJoyLY <= 255 / 2)
-    {
-        setMotorDirection(BOTH_MOTORS, MOTOR_DIR_BACKWARD);
-        moveSpeed = map(255 - rawJoyLY, offJoy, halfJoy, 0, 20);
-    }
-    else
-    {
-        setMotorDirection(BOTH_MOTORS, MOTOR_DIR_FORWARD);
-        moveSpeed = map(rawJoyLY, halfJoy, fullJoy, 0, 20);
-    }
-    if (moveSpeed < 5)
-    {
-        moveSpeed = 0;
-    }
-    setMotorSpeed(BOTH_MOTORS, moveSpeed);
-    Serial.print("Motor adjusted value: ");
-    Serial.println(moveSpeed);
-    delay(50);
-}
+*/
