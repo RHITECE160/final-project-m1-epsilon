@@ -1,4 +1,3 @@
-
 /*
   name: Milestone 1 both Controller full functionality code
   Description: This code enables the robot to understand commands from the robot and executes them.
@@ -17,12 +16,12 @@
       - used in the loop under case 1, to call driveByRemote() function in Driving.h
 
   Main variables:
-  PLAYSTATION 
-  betterRemoteMode
-  irResults
-  irx(IRrecPin)
-  Controller
-  myServo
+  PLAYSTATION -> used to select playstation controller
+  betterRemoteMode -> used to select between the two controllers
+  irResults -> displays IR results 
+  irx(IRrecPin) 
+  Controller ->PS2X object that interprets the playstation controller
+  myServo -> servo object to manipulate servo
   
 */
 
