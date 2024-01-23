@@ -16,55 +16,61 @@
   Date: Current Date
   Version: 1.0
 */
+#include <PS2X_lib.h>
+#include <Servo.h>
+#include "SimpleRSLK.h"
+
+
 
 /* Moves robot forward: both motors forward same speed */
+
 void forward() {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
   setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_FORWARD);
-  setMotorSpeed(BOTH_MOTORS, lowSpeed);
+  setMotorSpeed(BOTH_MOTORS, 15);
 }
 
 void back() {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
   setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_BACKWARD);
-  setMotorSpeed(BOTH_MOTORS, lowSpeed);
+  setMotorSpeed(BOTH_MOTORS, 15);
 }
 
 void TurnRight() {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
   setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_FORWARD);
-  setMotorSpeed(RIGHT_MOTOR, lowSpeed);
-  setMotorSpeed(LEFT_MOTOR, fastSpeed);
+  setMotorSpeed(RIGHT_MOTOR, 15);
+  setMotorSpeed(LEFT_MOTOR, 30);
 }
 
 void TurnLeft() {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
   setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_FORWARD);
-  setMotorSpeed(LEFT_MOTOR, lowSpeed);
-  setMotorSpeed(RIGHT_MOTOR, fastSpeed);
+  setMotorSpeed(LEFT_MOTOR, 15);
+  setMotorSpeed(RIGHT_MOTOR, 30);
 }
 
 void spin() {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
   setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_FORWARD);
-  setMotorSpeed(LEFT_MOTOR, fastSpeed);
-  setMotorSpeed(RIGHT_MOTOR, fastSpeed);
+  setMotorSpeed(LEFT_MOTOR, 30);
+  setMotorSpeed(RIGHT_MOTOR, 30);
 }
 
-void Openclaw(Servo myServo) {
+void Openclaw(Servo fServo) {
   //enableMotor(SERVOS_PER_TIMER);
-  myServo.write(-180);
+  fServo.write(0);
   delay(100);
 }
 
-void Closeclaw(Servo myServo) {
+void Closeclaw(Servo fServo) {
   //enableMotor(SERVOS_PER_TIMER);
-  myServo.write(180);
+  fServo.write(180);
   delay(100);
 }
 
