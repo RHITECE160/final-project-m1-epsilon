@@ -16,6 +16,11 @@
   Date: Current Date
   Version: 1.0
 */
+#include <PS2X_lib.h>
+#include <Servo.h>
+#include "SimpleRSLK.h"
+
+
 
 /* Moves robot forward: both motors forward same speed */
 
@@ -79,8 +84,8 @@ void spin() {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
   setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_FORWARD);
-  setMotorSpeed(LEFT_MOTOR, fastSpeed);
-  setMotorSpeed(RIGHT_MOTOR, fastSpeed);
+  setMotorSpeed(LEFT_MOTOR, 30);
+  setMotorSpeed(RIGHT_MOTOR, 30);
 }
 
 void spinOtherWay() {
@@ -97,9 +102,9 @@ void Openclaw(Servo myServo) {
   delay(100);
 }
 
-void Closeclaw(Servo myServo) {
+void Closeclaw(Servo fServo) {
   //enableMotor(SERVOS_PER_TIMER);
-  myServo.write(180);
+  fServo.write(180);
   delay(100);
 }
 
