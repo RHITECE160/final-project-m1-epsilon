@@ -1,4 +1,4 @@
-
+//chosen baud rate for each Serial port
  int btBaud = 9600;
  int usbBaud = 57600;
 
@@ -10,11 +10,10 @@
  int IRrecPin = 33;
 
  int servoPin = 38;
+ float wheelDiameter = 2.7559055; // obtained from example code, wheel diameter for driving in auto
+ int cntPerRevolution = 360;      // obtained from example code, wheel encoder resolution
 
- float wheelDiameter = 2.7559055; // obtained from example code
- int cntPerRevolution = 360;      // obtained from example code
-
- int remoteMap[7][3]{{69, 70, 71},
+ int remoteMap[7][3]{     {69, 70, 71},  //mapping of remote inputs
                           {68, 64, 67},
                           {7, 21, 9},
                           {22, 25, 13},
