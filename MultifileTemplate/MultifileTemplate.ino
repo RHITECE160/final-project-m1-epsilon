@@ -68,12 +68,11 @@ void setup()
   else if (controlMode == 1)
   {
     // put autonomous initialization code for here if neccessary
-    Serial.println("Starting in Autonomous")
+    Serial.println("Starting in Autonomous");
   }
 
 
-    while (error) {
-      error = ps2x.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
+    int  error = Controller.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, false, false);
 
       if (error == 0)
         Serial.println("Found Controller, configured successful ");
