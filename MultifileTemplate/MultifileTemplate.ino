@@ -60,6 +60,7 @@ void setup()
   else if (CurrentRemoteMode == 1)
   {
     // put start-up code for IR controller here if neccessary
+
   }
 
   int error = Controller.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, false, false);
@@ -100,14 +101,8 @@ void loop()
   {
   //Controller mode, when L1 is pressed it drives according to the driveByController function
   case 0:
-
-
-
   // replace THIS CODE WITH YOUR CONTROLLER DRIVING CODE
-      driveByController(Controller, myServo);
-
-
-
+  RemoteControlPlaystation();
     if (Controller.Button(PSB_SELECT))
     {
       betterRemoteMode = 1;
@@ -145,27 +140,38 @@ This function uses a playstation controller and the PLSK libraray with
 an RLSK robot using to implement remote controller.
 
 A few actions are programed for an example.
-
+*/
     // Example of receive and decode remote control command
     // the forward() and stop() functions should be independent of
     // the control methods
-    if (Controller.Button(PSB_PAD_UP)) {
-      Serial.print(Controller.Button(PSB_PAD_UP));
-      Serial.println("PAD UP button pushed ");
-      forward();
+void RemoteControlPlaystation(){
+    if (Controller.Analog(PSS_LY) != 128) {
+
+      int yVal = Controller.Analog(PSS_LY);
+      if(yVal < 128) {
+        int speedSetting = map((255-Controller.Analog(PSS_LY)), 128, 255, 0, 50);
+        forward(speedSetting);
+      }
+      else {
+        int speedSetting = map((Controller.Analog(PSS_LY)-128), 0, 128, 0, 50);
+        back(speedSetting);
+      }
+
     } 
-    else if(Controller.Button(PSB_PAD_DOWN)) {
-      Serial.println("PAD DOWN button pushed ");
-      back();
+
+    else if(Controller.Analog(PSS_LX) != 128) {
+      Serial.println(Controller.Analog(PSS_LX));
+      int xVal = Controller.Analog(PSS_LX);
+      if(xVal > 128) {
+        int speedSetting = map(Controller.Analog(PSS_LX), 128, 255, 0, 35);
+        TurnRight(speedSetting);
+      }
+      else {
+        int speedSetting = map(Controller.Analog(PSS_LX), 0, 128, 0, 35);
+        TurnLeft(speedSetting);
+      }
     }
-    else if(Controller.Button(PSB_PAD_RIGHT)) {
-      Serial.println("PAD RIGHT button pushed ");
-      TurnRight();
-    }
-    else if(Controller.Button(PSB_PAD_LEFT)) {
-      Serial.println("PAD LEFT button pushed ");
-      TurnLeft();
-    }
+
     else if(Controller.Button(PSB_R2)) {
       Serial.println("R2 button pushed ");
       spin();
@@ -182,7 +188,11 @@ A few actions are programed for an example.
       Serial.println("Square button pressed");
       Closeclaw(myServo);
     }
+    else if(Controller.Button(PSB_L2)) {
+      Serial.println("R2 button pushed ");
+      spinOtherWay();
+    }
     else {
       stop();
     }
-    */
+}
