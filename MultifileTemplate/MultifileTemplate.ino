@@ -1,10 +1,28 @@
-
 /*
-
+  name: Milestone 1 both Controller full functionality code
+  Description: This code enables the robot to understand commands from the robot and executes them.
   written for the MSP432401 board
   Authors: Rohan Malipeddi, Luis Hernandez Aguirre, Brooklyn Jennings
   Last revised: 1/22/2023
 
+  Hardware Connections: 
+  In Constants.h
+
+  Main functions: 
+  1. RemoteControlPlayStation() 
+      - contains mapping of playstation buttons to functions used in MotorFunction.h
+
+  2. driveByRemote() 
+      - used in the loop under case 1, to call driveByRemote() function in Driving.h
+
+  Main variables:
+  PLAYSTATION -> used to select playstation controller
+  betterRemoteMode -> used to select between the two controllers
+  irResults -> displays IR results 
+  irx(IRrecPin) 
+  Controller ->PS2X object that interprets the playstation controller
+  myServo -> servo object to manipulate servo
+  
 */
 
 // Load libraries used
@@ -53,20 +71,23 @@ void setup()
     Serial.println("Starting in Autonomous")
   }
 
-  int error = Controller.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, false, false);
 
-  if (error == 0)
-    Serial.println("Found Controller, configured successful ");
+    while (error) {
+      error = ps2x.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
 
-  else if (error == 1)
-    Serial.println("No controller found, check wiring, see readme.txt to enable debug. visit www.billporter.info for troubleshooting tips");
+      if (error == 0)
+        Serial.println("Found Controller, configured successful ");
 
-  else if (error == 2)
-    Serial.println("Controller found but not accepting commands. see readme.txt to enable debug. Visit www.billporter.info for troubleshooting tips");
+      else if (error == 1)
+        Serial.println("No controller found, check wiring, see readme.txt to enable debug. visit www.billporter.info for troubleshooting tips");
 
-  else if (error == 3)
+      else if (error == 2)
+        Serial.println("Controller found but not accepting commands. see readme.txt to enable debug. Visit www.billporter.info for troubleshooting tips");
+
+      else if (error == 3)
     Serial.println("Controller refusing to enter Pressures mode, may not support it. ");
   delay(50);
+
 
 }
 
@@ -116,73 +137,69 @@ void loop()
 /* RemoteControlPlaystation() function
 This function uses a playstation controller and the PLSK libraray with
 an RLSK robot using to implement remote controller.
-
-A few actions are programed for an example.
 */
-// Example of receive and decode remote control command
-// the forward() and stop() functions should be independent of
-// the control methods
-void RemoteControlPlaystation()
-{
-  if (Controller.Analog(PSS_LY) != 128)
-  {
+void RemoteControlPlaystation(){
+    //checks if the joystick is moved
+    if (Controller.Analog(PSS_LY) != 128) {
+      //assigning a value for y position of the joystick
+      int yVal = Controller.Analog(PSS_LY);
+      //the joystick becomes less as I move it forward, so condition is opposite
+      if(yVal < 128) {  
+        //mapped to specific speeds
+        int speedSetting = map((255-Controller.Analog(PSS_LY)), 128, 255, 0, 50);
+        forward(speedSetting);
+      }
+      else {
+        //mapped to specific speeds
+        int speedSetting = map((Controller.Analog(PSS_LY)-128), 0, 128, 0, 50);
+        back(speedSetting);
+      }
 
-    int yVal = Controller.Analog(PSS_LY);
-    if (yVal < 128)
-    {
-      int speedSetting = map((255 - Controller.Analog(PSS_LY)), 128, 255, 0, 50);
-      forward(speedSetting);
+    } 
+    //joystick moved?
+    else if(Controller.Analog(PSS_LX) != 128) {
+      //assigning a value for x position of the joystick
+      int xVal = Controller.Analog(PSS_LX);
+      //horizontal motoin moves like normal
+      if(xVal > 128) {
+        //mapped to specific speeds
+        int speedSetting = map(Controller.Analog(PSS_LX), 128, 255, 0, 35);
+        TurnRight(speedSetting);
+      }
+      else {
+        //mapped to specific speeds
+        int speedSetting = map((Controller.Analog(PSS_LX)-128), 0, 128, 0, 35);
+        TurnLeft(speedSetting);
+      }
     }
-    else
-    {
-      int speedSetting = map((Controller.Analog(PSS_LY) - 128), 0, 128, 0, 50);
-      back(speedSetting);
-    }
-  }
 
-  else if (Controller.Analog(PSS_LX) != 128)
-  {
-    Serial.println(Controller.Analog(PSS_LX));
-    int xVal = Controller.Analog(PSS_LX);
-    if (xVal > 128)
-    {
-      int speedSetting = map(Controller.Analog(PSS_LX), 128, 255, 0, 35);
-      TurnRight(speedSetting);
+    //spin mapping
+    else if(Controller.Button(PSB_R2)) {
+      Serial.println("R2 button pushed ");
+      spin();
     }
-    else
-    {
-      int speedSetting = map(Controller.Analog(PSS_LX) - 128, 0, 128, 0, 35);
-      TurnLeft(speedSetting);
+    //force stop mapping
+    else if (Controller.Button(PSB_CROSS)) {
+      Serial.println("CROSS button pushed");
+      stop();
+    } 
+    //claw open map
+    else if(Controller.Button(PSB_CIRCLE)) {
+      Serial.println("Circle button pressed");
+      Openclaw(myServo);
+    } 
+    //claw close map
+    else if(Controller.Button(PSB_SQUARE)) {
+      Serial.println("Square button pressed");
+      Closeclaw(myServo);
     }
-  }
-
-  else if (Controller.Button(PSB_R2))
-  {
-    Serial.println("R2 button pushed ");
-    spin();
-  }
-  else if (Controller.Button(PSB_CROSS))
-  {
-    Serial.println("CROSS button pushed");
-    stop();
-  }
-  else if (Controller.Button(PSB_CIRCLE))
-  {
-    Serial.println("Circle button pressed");
-    Openclaw(myServo);
-  }
-  else if (Controller.Button(PSB_SQUARE))
-  {
-    Serial.println("Square button pressed");
-    Closeclaw(myServo);
-  }
-  else if (Controller.Button(PSB_L2))
-  {
-    Serial.println("R2 button pushed ");
-    spinOtherWay();
-  }
-  else
-  {
-    stop();
-  }
-}
+    //spin other way map
+    else if(Controller.Button(PSB_L2)) {
+      Serial.println("R2 button pushed ");
+      spinOtherWay();
+    }
+    //default stop if nothing pressed
+    else {
+      stop();
+    }
+} //end RemoteControlPlaystation

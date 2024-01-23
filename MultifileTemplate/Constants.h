@@ -1,3 +1,16 @@
+/*
+***** Hardware Connections: *****
+    start button       P3.0
+    playstation connections
+    brown wire         P1.7 
+    orange wire        P1.6 
+    yellow wire        P2.3
+    blue wire          P6.7
+    IRrecPin           33
+    servoPin           38
+    remoteMap          2D array of remove inputs
+*/
+ 
 //chosen baud rate for each Serial port
  int btBaud = 9600;
  int usbBaud = 57600;
