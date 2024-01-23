@@ -6,50 +6,36 @@
   motors to move forward and stop.
 
   Functions:
-  1. void moveForward()
+  1. void forward()
      - Activates the motor to move forward.
-
-  2. void stopMotor()
-     - Stops the motor.
-
-  Created by: Your Name
-  Date: Current Date
+  2. void back() 
+     - Activates both motors to move backward
+  3. void TurnRight() 
+     - Actives left motor on speed specified and other on lowspeed or 0
+  4. void TurnLeft() 
+     - Actives right motor on speed specified and other on lowspeed or 0
+  5. void spin()
+     - Actives left motor to go back and right to go front at fastspeed or 30
+  5. void spinOtherWay()
+     - Actives right motor to go back and left to go front at fastspeed or 30
+  6. void OpenClaw()
+     - Sets servo motor to 0 degrees
+  6. void CloseClaw()
+     - Sets servo motor to 180 degrees
+  2. void stop()
+     - Stops both motors.
+  
+  Created by: Rohan Malipeddi
+  Date: 1/22/24
   Version: 1.0
 */
+
+//included headers files just to be safe
 #include <PS2X_lib.h>
 #include <Servo.h>
 #include "SimpleRSLK.h"
 
-
-
-/* Moves robot forward: both motors forward same speed */
-
-// const int halfJoy = 255 / 2;
-// const int fullJoy = 255;
-// const int offJoy = 0;
-
-// void driveByController(int rawJoyLY){
-//     //int rawJoyLY = Controller.Analog(PSS_LY);
-//     int moveSpeed = 0;
-
-//     //Serial.print("Joystick Raw Value: ");
-//     //Serial.println(rawJoyLY);
-//     enableMotor(BOTH_MOTORS);
-
-//     if(rawJoyLY <= 255/2){
-//         setMotorDirection(BOTH_MOTORS,MOTOR_DIR_BACKWARD);
-//         moveSpeed = map(255-rawJoyLY,offJoy,halfJoy,0,20);
-//     }
-//     else{
-//         setMotorDirection(BOTH_MOTORS,MOTOR_DIR_FORWARD);
-//         moveSpeed = map(rawJoyLY,halfJoy,fullJoy,0,20);
-//     }
-
-//     setMotorSpeed(BOTH_MOTORS, moveSpeed);
-//     //Serial.print("Motor adjusted value: ");
-//     //Serial.println(moveSpeed);
-// }
-
+//- Activates the motor to move forward.
 void forward(int speed) {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
@@ -57,6 +43,7 @@ void forward(int speed) {
   setMotorSpeed(BOTH_MOTORS, speed);
 }
 
+//- Activates both motors to move backward
 void back(int speed) {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
@@ -64,6 +51,7 @@ void back(int speed) {
   setMotorSpeed(BOTH_MOTORS, speed);
 }
 
+//- Actives left motor on speed specified and other on lowspeed or 0
 void TurnRight(int speed) {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
@@ -72,6 +60,7 @@ void TurnRight(int speed) {
   setMotorSpeed(LEFT_MOTOR, speed);
 }
 
+//Actives right motor on speed specified and other on lowspeed or 0
 void TurnLeft(int speed) {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
@@ -80,6 +69,7 @@ void TurnLeft(int speed) {
   setMotorSpeed(RIGHT_MOTOR, speed);
 }
 
+//Actives left motor to go back and right to go front at fastspeed or 30
 void spin() {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_BACKWARD);
@@ -88,6 +78,7 @@ void spin() {
   setMotorSpeed(RIGHT_MOTOR, 30);
 }
 
+//Actives right motor to go back and left to go front at fastspeed or 30
 void spinOtherWay() {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
@@ -96,12 +87,14 @@ void spinOtherWay() {
   setMotorSpeed(RIGHT_MOTOR, fastSpeed);
 }
 
+//Sets servo motor to 0 degrees
 void Openclaw(Servo myServo) {
   //enableMotor(SERVOS_PER_TIMER);
   myServo.write(0);
   delay(100);
 }
 
+//Sets servo motor to 180 degrees
 void Closeclaw(Servo fServo) {
   //enableMotor(SERVOS_PER_TIMER);
   fServo.write(180);
