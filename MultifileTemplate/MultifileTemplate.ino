@@ -110,14 +110,13 @@ void loop()
   Controller.read_gamepad();
   enableMotor(BOTH_MOTORS);
 
+//Starts by default with betterRemoteMode as 0, this is the playstation mode, when you hit the Select button it
+//switches over to IR control, when in IR control mode when the start button is pressed it will switch back to the controller.
   switch (betterRemoteMode)
   {
-
+  //Controller mode, when L1 is pressed it drives according to the driveByController function
   case 0:
-    if (Controller.Button(PSB_L1))
-    {
       driveByController(Controller, myServo);
-    }
     if (Controller.Button(PSB_SELECT))
     {
       betterRemoteMode = 1;
@@ -132,6 +131,7 @@ void loop()
 
     break;
 
+//IR Remote Section, calls drive by remote repeatedly until start button is pressed
   case 1:
     driveByRemote(irx, irResults, myServo);
     if (Controller.Button(PSB_START))
@@ -147,7 +147,6 @@ void loop()
     }
     break;
   }
-  // Operate the robot in remote control mode
 }
 
 /* RemoteControlPlaystation() function
