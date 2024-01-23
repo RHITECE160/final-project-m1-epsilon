@@ -80,7 +80,7 @@ void setup()
     int error = 1;
 
     while (error) {
-      error = ps2x.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
+      error = Controller.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, pressures, rumble);
 
       if (error == 0)
         Serial.println("Found Controller, configured successful ");
@@ -94,6 +94,7 @@ void setup()
       else if (error == 3)
         Serial.println("Controller refusing to enter Pressures mode, may not support it. ");
       delayMicroseconds(1000 * 1000);
+    }
   }
 
   if (irx.initIRReceiver())
@@ -107,8 +108,7 @@ void setup()
   }
 }
 
-void loop()
-{
+void loop() {
   // Read input from PlayStation controller
   Controller.read_gamepad();
   enableMotor(BOTH_MOTORS);
@@ -157,7 +157,7 @@ void loop()
 This function uses a playstation controller and the PLSK libraray with
 an RLSK robot using to implement remote controller.
 */
-void RemoteControlPlaystation(){
+void RemoteControlPlaystation() {
     //checks if the joystick is moved
     if (Controller.Analog(PSS_LY) != 128) {
       //assigning a value for y position of the joystick
