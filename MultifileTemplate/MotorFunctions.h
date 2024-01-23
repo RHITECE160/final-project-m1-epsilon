@@ -92,8 +92,8 @@ void spinOtherWay() {
   enableMotor(BOTH_MOTORS);
   setMotorDirection(LEFT_MOTOR, MOTOR_DIR_FORWARD);
   setMotorDirection(RIGHT_MOTOR, MOTOR_DIR_BACKWARD);
-  setMotorSpeed(LEFT_MOTOR, fastSpeed);
-  setMotorSpeed(RIGHT_MOTOR, fastSpeed);
+  setMotorSpeed(LEFT_MOTOR, 50);
+  setMotorSpeed(RIGHT_MOTOR, 50);
 }
 
 void Openclaw(Servo myServo) {

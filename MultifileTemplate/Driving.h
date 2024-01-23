@@ -3,6 +3,7 @@
 #include "SimpleRSLK.h"
 #include "PS2X_lib.h"
 
+//joystick value constants
 int halfJoy = 255 / 2;
 int fullJoy = 255;
 int offJoy = 0;
