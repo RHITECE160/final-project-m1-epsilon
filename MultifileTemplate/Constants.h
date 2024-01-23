@@ -8,7 +8,7 @@
     blue wire          P6.7
     IRrecPin           33
     servoPin           38
-    remoteMap          
+    remoteMap          2D array of remove inputs
 */
  
 //chosen baud rate for each Serial port
