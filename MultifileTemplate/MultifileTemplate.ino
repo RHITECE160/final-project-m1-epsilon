@@ -4,7 +4,7 @@
   written for the MSP432401 board
   Authors: Rohan Malipeddi, Luis Hernandez Aguirre, Brooklyn Jennings
   Last revised: 1/22/2023
-  
+
 */
 
 // Load libraries used
@@ -61,7 +61,6 @@ void setup()
   else if (CurrentRemoteMode == 1)
   {
     // put start-up code for IR controller here if neccessary
-
   }
 
   int error = Controller.config_gamepad(PS2_CLK, PS2_CMD, PS2_SEL, PS2_DAT, false, false);
@@ -96,14 +95,14 @@ void loop()
   Controller.read_gamepad();
   enableMotor(BOTH_MOTORS);
 
-//Starts by default with betterRemoteMode as 0, this is the playstation mode, when you hit the Select button it
-//switches over to IR control, when in IR control mode when the start button is pressed it will switch back to the controller.
+  // Starts by default with betterRemoteMode as 0, this is the playstation mode, when you hit the Select button it
+  // switches over to IR control, when in IR control mode when the start button is pressed it will switch back to the controller.
   switch (betterRemoteMode)
   {
-  //Controller mode, when L1 is pressed it drives according to the driveByController function
+  // Controller mode, when L1 is pressed it drives according to the driveByController function
   case 0:
-  // replace THIS CODE WITH YOUR CONTROLLER DRIVING CODE
-  RemoteControlPlaystation();
+    // replace THIS CODE WITH YOUR CONTROLLER DRIVING CODE
+    RemoteControlPlaystation();
     if (Controller.Button(PSB_SELECT))
     {
       betterRemoteMode = 1;
@@ -118,7 +117,7 @@ void loop()
 
     break;
 
-//IR Remote Section, calls drive by remote repeatedly until start button is pressed
+    // IR Remote Section, calls drive by remote repeatedly until start button is pressed
   case 1:
     driveByRemote(irx, irResults, myServo);
     if (Controller.Button(PSB_START))
@@ -142,58 +141,70 @@ an RLSK robot using to implement remote controller.
 
 A few actions are programed for an example.
 */
-    // Example of receive and decode remote control command
-    // the forward() and stop() functions should be independent of
-    // the control methods
-void RemoteControlPlaystation(){
-    if (Controller.Analog(PSS_LY) != 128) {
+// Example of receive and decode remote control command
+// the forward() and stop() functions should be independent of
+// the control methods
+void RemoteControlPlaystation()
+{
+  if (Controller.Analog(PSS_LY) != 128)
+  {
 
-      int yVal = Controller.Analog(PSS_LY);
-      if(yVal < 128) {
-        int speedSetting = map((255-Controller.Analog(PSS_LY)), 128, 255, 0, 50);
-        forward(speedSetting);
-      }
-      else {
-        int speedSetting = map((Controller.Analog(PSS_LY)-128), 0, 128, 0, 50);
-        back(speedSetting);
-      }
+    int yVal = Controller.Analog(PSS_LY);
+    if (yVal < 128)
+    {
+      int speedSetting = map((255 - Controller.Analog(PSS_LY)), 128, 255, 0, 50);
+      forward(speedSetting);
+    }
+    else
+    {
+      int speedSetting = map((Controller.Analog(PSS_LY) - 128), 0, 128, 0, 50);
+      back(speedSetting);
+    }
+  }
 
-    } 
+  else if (Controller.Analog(PSS_LX) != 128)
+  {
+    Serial.println(Controller.Analog(PSS_LX));
+    int xVal = Controller.Analog(PSS_LX);
+    if (xVal > 128)
+    {
+      int speedSetting = map(Controller.Analog(PSS_LX), 128, 255, 0, 35);
+      TurnRight(speedSetting);
+    }
+    else
+    {
+      int speedSetting = map(Controller.Analog(PSS_LX) - 128, 0, 128, 0, 35);
+      TurnLeft(speedSetting);
+    }
+  }
 
-    else if(Controller.Analog(PSS_LX) != 128) {
-      Serial.println(Controller.Analog(PSS_LX));
-      int xVal = Controller.Analog(PSS_LX);
-      if(xVal > 128) {
-        int speedSetting = map(Controller.Analog(PSS_LX), 128, 255, 0, 35);
-        TurnRight(speedSetting);
-      }
-      else {
-        int speedSetting = map(Controller.Analog(PSS_LX), 0, 128, 0, 35);
-        TurnLeft(speedSetting);
-      }
-    }
-
-    else if(Controller.Button(PSB_R2)) {
-      Serial.println("R2 button pushed ");
-      spin();
-    }
-    else if (Controller.Button(PSB_CROSS)) {
-      Serial.println("CROSS button pushed");
-      stop();
-    } 
-    else if(Controller.Button(PSB_CIRCLE)) {
-      Serial.println("Circle button pressed");
-      Openclaw(myServo);
-    } 
-    else if(Controller.Button(PSB_SQUARE)) {
-      Serial.println("Square button pressed");
-      Closeclaw(myServo);
-    }
-    else if(Controller.Button(PSB_L2)) {
-      Serial.println("R2 button pushed ");
-      spinOtherWay();
-    }
-    else {
-      stop();
-    }
+  else if (Controller.Button(PSB_R2))
+  {
+    Serial.println("R2 button pushed ");
+    spin();
+  }
+  else if (Controller.Button(PSB_CROSS))
+  {
+    Serial.println("CROSS button pushed");
+    stop();
+  }
+  else if (Controller.Button(PSB_CIRCLE))
+  {
+    Serial.println("Circle button pressed");
+    Openclaw(myServo);
+  }
+  else if (Controller.Button(PSB_SQUARE))
+  {
+    Serial.println("Square button pressed");
+    Closeclaw(myServo);
+  }
+  else if (Controller.Button(PSB_L2))
+  {
+    Serial.println("R2 button pushed ");
+    spinOtherWay();
+  }
+  else
+  {
+    stop();
+  }
 }
