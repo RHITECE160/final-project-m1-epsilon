@@ -45,6 +45,7 @@ enum RemoteMode {
 
 // Declare and initialize the current state variable
 RemoteMode CurrentRemoteMode = PLAYSTATION;
+//RemoteMode CurrentRemoteMode = IR_REMOTE;
 
 // Tuning Parameters
 const uint16_t lowSpeed = 15;
@@ -93,6 +94,7 @@ void setup() {
     }
   } else if (CurrentRemoteMode == 1) {
     // put start-up code for IR controller here if neccessary
+
   }
 }
 
@@ -107,6 +109,7 @@ void loop() {
 
   } else if (CurrentRemoteMode == 1) {
     // put code here to run using the IR controller if neccessary
+
   }
 }
 
@@ -115,7 +118,7 @@ void loop() {
   This function uses a playstation controller and the PLSK libraray with
   an RLSK robot using to implement remote controller. 
   
-  A few actions are programed for an example. 
+  A few actions are programed for an example.       
 
   Button control map:
   PAD UP button moves both motors forward
@@ -127,23 +130,52 @@ void loop() {
     // Example of receive and decode remote control command
     // the forward() and stop() functions should be independent of
     // the control methods
-    if (ps2x.Button(PSB_PAD_UP)) {
-      Serial.print(ps2x.Button(PSB_PAD_UP));
-      Serial.println("PAD UP button pushed ");
-      forward();
+
+    if (ps2x.Analog(PSS_LY) != 128) {
+      //int speedSetting = map(ps2x.Analog(PSS_LY), 128, 255, 0, 50);
+      //Serial.println(ps2x.Analog(PSS_LY));
+      int yVal = ps2x.Analog(PSS_LY);
+      if(yVal < 128) {
+        int speedSetting = map((255-ps2x.Analog(PSS_LY)), 128, 255, 0, 50);
+        forward(speedSetting);
+      }
+      else {
+        int speedSetting = map((ps2x.Analog(PSS_LY)-128), 0, 128, 0, 50);
+        back(speedSetting);
+      }
+      //int speedSetting = map((255-ps2x.Analog(PSS_LY)), 128, 255, 0, 50);
+      //Serial.println(speedSetting);
+      //Serial.println("PAD UP button pushed ");
+      //forward(speedSetting);
+      //driveByController(ps2x.Analog(PSS_LY));
     } 
-    else if(ps2x.Button(PSB_PAD_DOWN)) {
-      Serial.println("PAD DOWN button pushed ");
-      back();
+    // else if(ps2x.Button(PSB_R1)) {
+    //   //Serial.println(ps2x.Analog(PSS_LY));
+    //   int speedSetting = map((ps2x.Analog(PSS_LY)-128), 0, 128, 0, 50);
+    //   //int speedSetting = map(ps2x.Analog(PSS_LY), 128, 0, 0, 50);
+    //   //Serial.println(speedSetting);
+    //   //Serial.println("PAD DOWN button pushed ");
+    //   back(speedSetting);
+    //   //driveByController(ps2x.Analog(PSS_LY));
+    // }
+    else if(ps2x.Analog(PSS_LX) != 128) {
+      //Serial.println("PAD RIGHT button pushed ");
+      Serial.println(ps2x.Analog(PSS_LX));
+      int xVal = ps2x.Analog(PSS_LX);
+      if(xVal > 128) {
+        int speedSetting = map(ps2x.Analog(PSS_LX), 128, 255, 0, 35);
+        TurnRight(speedSetting);
+      }
+      else {
+        int speedSetting = map(ps2x.Analog(PSS_LX), 0, 128, 0, 35);
+        TurnLeft(speedSetting);
+      }
+      //TurnRight();
     }
-    else if(ps2x.Button(PSB_PAD_RIGHT)) {
-      Serial.println("PAD RIGHT button pushed ");
-      TurnRight();
-    }
-    else if(ps2x.Button(PSB_PAD_LEFT)) {
-      Serial.println("PAD LEFT button pushed ");
-      TurnLeft();
-    }
+    // else if(ps2x.Button(PSB_PAD_LEFT)) {
+    //   Serial.println("PAD LEFT button pushed ");
+    //   TurnLeft();
+    // }
     else if(ps2x.Button(PSB_R2)) {
       Serial.println("R2 button pushed ");
       spin();
@@ -159,6 +191,10 @@ void loop() {
     else if(ps2x.Button(PSB_SQUARE)) {
       Serial.println("Square button pressed");
       Closeclaw(myServo);
+    }
+    else if(ps2x.Button(PSB_L2)) {
+      Serial.println("R2 button pushed ");
+      spinOtherWay();
     }
     else {
       stop();
