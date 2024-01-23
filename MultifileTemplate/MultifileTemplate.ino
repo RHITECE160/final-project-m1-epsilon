@@ -1,26 +1,10 @@
 
-/*A multifile project code template
-  A template for the Milestone 1 project code that uses multiple files
-  for modularity. The compiler first loads the principal file
-  (the one with the same name as the folder) and then loads
-  the others in alphabetical order. Variables defined in an
-  earlier file will be visible to code in a file that is loaded
-  later, but not vice-versa.
-
-  Calls functions in files:
-  MotorFunctions.ino
+/*
 
   written for the MSP432401 board
-  Author: Deborah Walter
-  Last revised: 11/28/2023
-
-***** Hardware Connections: *****
-     start button       P3.0
-     playstation connections
-     brown wire         P1.7
-     orange wire        P1.6
-     yellow wire        P2.3
-     blue wire          P6.7
+  Authors: Rohan Malipeddi, Luis Hernandez Aguirre, Brooklyn Jennings
+  Last revised: 1/22/2023
+  
 */
 
 // Load libraries used
