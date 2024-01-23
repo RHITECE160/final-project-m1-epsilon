@@ -1,5 +1,4 @@
 {
     "board": "energia:msp432:MSP-EXP432P401R",
-    "sketch": "MultifileTemplate\\MultifileTemplate.ino",
     "port": "COM6"
 }
