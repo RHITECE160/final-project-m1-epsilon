@@ -116,7 +116,14 @@ void loop()
   {
   //Controller mode, when L1 is pressed it drives according to the driveByController function
   case 0:
+
+
+
+  // replace THIS CODE WITH YOUR CONTROLLER DRIVING CODE
       driveByController(Controller, myServo);
+
+
+
     if (Controller.Button(PSB_SELECT))
     {
       betterRemoteMode = 1;
